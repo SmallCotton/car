@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+<!--     <script src="js/jquery.js"></script>
+    <script src="js/touchswiper.js"></script> -->
+    <script src="js/base.js"></script>
+    <style>
+    *{
+        padding: 0;
+        margin: 0;
+        font-size: 40px;
+        line-height: 50px;
+    }
+    html, body,#test{
+        width: 100%;
+        height: 100%;
+        background-color: #f4f4f4;
+    }
+    </style>
+</head>
+<body>
+<div id="test">
+    <div id="swipe_text"></div>
+    <div id="pinch_text"></div>
+</div>
+<script>
+ $('#test').on('touchstart touchmove touchend', function(e){
+   e.preventDefault();
+
+ });
+      // //Enable swiping...
+      // $("#test").swipe( {
+      //   //Generic swipe handler for all directions
+      //   swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+      //     $(this).text("You swiped " + direction );  
+      //   },
+      //   //Default is 75px, set to 0 for demo so any distance triggers swipe
+      //    threshold:0
+      // });
+            //Keep track of how many swipes
+      // var count=0;
+      // //Enable swiping...
+      // $("#test").swipe( {
+      //   //Single swipe handler for left swipes
+      //   swipeLeft:function(event, direction, distance, duration, fingerCount) {
+      //     $(this).text("You swiped " + direction + " " + ++count + " times " );  
+      //   },
+      //   //Default is 75px, set to 0 for demo so any distance triggers swipe
+      //   threshold:0
+      // });
+
+//=============================
+    // $(function() {      
+    //   $("#test").swipe( {
+    //     swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+    //       $("#test").text("You swiped " + direction + " with " + fingerCount + " fingers");
+    //     },
+    //     threshold:0,
+    //     fingers:'all'
+    //   });
+    // });
+  
+//=============================
+    // $(function() {      
+    //   $("#test").swipe( {
+    //     pinchIn:function(event, direction, distance, duration, fingerCount, pinchZoom)
+    //     {
+    //       $(this).text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
+    //     },
+    //     pinchOut:function(event, direction, distance, duration, fingerCount, pinchZoom)
+    //     {
+    //       $(this).text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
+    //     },
+    //     pinchStatus:function(event, phase, direction, distance , duration , fingerCount, pinchZoom) {
+    //       $(this).html("Pinch zoom scale "+pinchZoom+"  <br/>Distance pinched "+distance+" <br/>Direction " + direction);
+    //     },
+    //     fingers:2,  
+    //     pinchThreshold:0  
+    //   });
+    // });
+  //+++++++++++++++++++++++++++++++++++++++++++
+  var pinchst = false;
+   $(function() {      
+      $("#test").swipe( {
+        swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
+           //$(this).find('#swipe_text').text("swiped " + distance + ' px');
+           // if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+           //   //The handlers below fire after the status, 
+           //   // so we can change the text here, and it will be replaced if the handlers below fire
+           //  if (fingerCount==1) {
+           //      $(this).find('#swipe_text').text("1根手指");
+           //  }else if(fingerCount==2 && pinchst){
+           //      $(this).find('#swipe_text').text("pinched");
+           //  }else if(fingerCount==2 && !pinchst){
+           //      $(this).find('#swipe_text').text("2根手指");
+           //  } else if(fingerCount==3){
+           //      $(this).find('#swipe_text').text("3根手指");
+           //  }
+           //   //$(this).find('#swipe_text').text("No swipe was made");
+            
+           // }
+        },
+        pinchStatus:function(event, phase, direction, distance , duration , fingerCount, pinchZoom) {
+          $(this).find('#pinch_text').text("pinched " + direction + distance + " px ");
+         
+          // if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+          //    //The handlers below fire after the status, 
+          //    // so we can change the text here, and it will be replaced if the handlers below fire
+          //    $(this).find('#pinch_text').text("No pinch was made");
+          //  }
+        },
+        swipe:function(event, direction, distance, duration, fingerCount) {
+          
+           //if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+             //The handlers below fire after the status, 
+             // so we can change the text here, and it will be replaced if the handlers below fire
+            if (fingerCount==1) {
+                $(this).find('#swipe_text').text("1根手指");
+            }else if(fingerCount==2 && pinchst){
+                $(this).find('#swipe_text').text("pinched");
+            }else if(fingerCount==2 && !pinchst){
+                $(this).find('#swipe_text').text("2根手指");
+            } else if(fingerCount==3){
+                $(this).find('#swipe_text').text("3根手指");
+            }
+             //$(this).find('#swipe_text').text("No swipe was made");
+            
+           //}
+          // $(this).find('#swipe_text').text("You swiped " + direction + " with " + fingerCount + " fingers" + event);
+        },
+        // pinchIn:function(event, direction, distance, duration, fingerCount, pinchZoom) {
+        //      pinchst = direction ? true : false; 
+        //   $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"0000px, zoom scale is "+pinchZoom); 
+        // },
+        // pinchOut:function(event, direction, distance, duration, fingerCount, pinchZoom) {
+        //   $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
+        // },
+        fingers:$.fn.swipe.fingers.ALL  
+      });
+    });
+
+
+        // $("#test").swipe( {
+        //     swipeStatus:function(event, phase, direction, distance, duration, fingers, fingerData) {
+        //     if(phase==$.fn.swipe.phases.PHASE_START) {
+        //       $(this).text("moving...");
+        //     } 
+        //     if(phase==$.fn.swipe.phases.PHASE_CANCEL) {
+        //       $(this).text("swipe cancelled (due to finger count) "  );
+        //     }   
+        //     },
+        //     swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+        //       $(this).text("You swiped " + direction + " with " + fingerCount + " fingers");
+        //     },
+        //     threshold:0,
+        //     fingers:2
+        // });
+
+        //$("#test_2").swipe({ fingers:3 } );
+
+ 
+
+ 
+
+    //Set some options later
+    //$("#aa").swipe( {fingers:2} );
+
+ 
+    // var hammer1 = new Hammer(document.getElementById("aa"));
+    //     hammer1.get("pinch").set({ enable: true });
+
+    //     hammer1.on("pinchend", function (e) {
+    //         alert('pinchend');
+    //     });
+
+    // hammer1.on("panend", function (e) {
+    //     alert('panend');
+    // });
+    // hammer1.on("tap", function (e) {
+    //     alert('Tap'); 
+    // });
+
+</script>
+</body>
+</html>

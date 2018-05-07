@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script>
+        document.documentElement.style.fontSize = Math.max(window.innerWidth, window.innerHeight)/19.2 + 'px';
+    </script>
+</head>
+<body class="">
+<!-- <div class="page page1 subpage">    -->
+    <div class="sec div0"> 
+        <div class="sub-div0">
+            <div class="input"></div>
+            <p class="laggy laggy1"><i class="ico ico-1"></i>拖至此处删除站点</p>
+            <div class="state-0-box ct">
+                <div class="txt0 tar txt0l">
+                    <p class="p1">起始站</p>
+                    <p class="p2">颐和园</p>
+                </div>
+                <div class="circle-0-hr ct"></div>
+                <div class="txt0 tal txt0r">
+                    <p class="p1">终点站</p>
+                    <p class="p2">清华大学</p>
+                </div>
+                <div class="circle-0-box">
+                    <div class="cir">
+                        <span>颐和园东宫门</span>
+                    </div>
+                    <div class="cir nextcir">
+                        <p class="retime">剩余<b>6</b>分钟</p>
+                        <p class="nci">
+                            <span class="cell">
+                                <b>清华大学二校门</b>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p class="laggy laggy2"><i class="ico ico-1"></i>拖至此处删除站点</p>
+            <a href="javascript:void(0)" class="ico ico-2"></a>
+            <div class="nav-tab">
+                <a href="javascript:void(0)" class="ico ico-3 sel"></a>
+                <a href="javascript:void(0)" class="ico ico-4"></a>
+                <a href="javascript:void(0)" class="ico ico-5"></a>
+                <a href="javascript:void(0)" class="ico ico-6"></a>
+            </div>
+        </div>
+    </div>    
+    <div class="sub-wrap">
+        <div class="sec div01" id="div01">
+            <div class="input"></div>
+            <div class="tip tip2"></div>
+            <div class="tip tip1"></div>
+            <div class="map">
+                <div class="spot spot0"></div>
+                <div class="spot spot1"></div>
+                <div class="spot spot2"></div>
+                <div class="spot spot3"></div>
+                <div class="spot spot4"></div>
+                <div class="spot spot5"></div>
+                <div class="spot spot6"></div>
+                <div class="spot spot7"></div>
+            </div>
+            <p class="map-tip ct" id="mapTip">1公里，约10分钟</p>
+            <div class="state-circle ct" id='stateCircle'>
+                <div class="move ct">
+                    <em class="yes"></em>
+                    <em class="no"></em>
+                </div>
+                <img src="img/state/0.png" class="ct" id="circleImg">
+                <p class="circle-addr" id="circleAddr"></p>
+            </div>
+            <div class="state-0-box">
+                <div class="txt0 tar txt0l">
+                    <p class="p1">起始站</p>
+                    <p class="p2">颐和园</p>
+                </div>
+                <div class="circle-0-hr ct"></div>
+                <div class="txt0 tal txt0r">
+                    <p class="p1">终点站</p>
+                    <p class="p2">清华大学</p>
+                </div>
+                <div class="circle-0-box" id="axis01">
+                    <div class="addcir ct"><span>+</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- </div> -->
+<script src="js/base.js"></script>
+<script src="js/main.js"></script>
+<script>
+    var map= ['颐和园东宫门', '海淀公园', '中关村', '北京大学东门', '五道口', '清华东路西口', '清华大学二校门', '圆明园南门'];
+</script>
+</body>
+</html>

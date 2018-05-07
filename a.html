@@ -1,0 +1,205 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="format-detection" content="telephone=no">
+ 
+<title>Hammer.js-图片拖动、放缩、旋转</title>
+<style>
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+*, *:after, *:before {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    min-height: 100%;
+    background: #eee;
+    font: 13px/1.5em 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #4986e7;
+}
+
+.bg1, .green { background: #42d692; }
+.bg2, .blue { background: #4986e7; }
+.bg3, .red { background: #d06b64; }
+.bg4, .purple { background: #cd74e6; }
+.bg5, .azure { background: #9fe1e7; }
+
+body {
+    margin: 20px;
+}
+
+pre {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.clear { clear: both; }
+
+    html, body { overflow: hidden; margin: 0; }
+    body { -webkit-perspective: 500; -moz-perspective: 500; perspective: 500; }
+    .animate { -webkit-transition: all .3s; -moz-transition: all .3s; transition: all .3s; }
+    #hit { padding: 10px; }
+    #imgid{width: 300px;}
+</style>
+</head>
+<body>
+    <img id="imgid" class="imgid" src="img/state/0.jpg"/>
+    <script type="text/javascript" src="js/base.js"></script>
+    <script>
+        var reqAnimationFrame = (function () {
+            return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+        })();
+
+        var el = document.querySelector("#imgid");
+
+        var START_X = Math.round((window.innerWidth - el.offsetWidth) / 2);
+        var START_Y = Math.round((window.innerHeight - el.offsetHeight) / 2);
+
+        var ticking = false;
+        var transform;   //图像效果
+        var timer;
+        var initAngle = 0;  //旋转角度
+        var initScale = 1;  //放大倍数
+
+        var mc = new Hammer.Manager(el);   //用管理器  可以同时触发旋转 拖拽  移动
+        //var mc = new Hammer(el);        //旋转和移动互斥
+        /**
+        ev.srcEvent.type  touchstart  touchend touchmove
+        ev.deltaX  手势移动位移变量  
+        */
+        mc.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));  
+        mc.add(new Hammer.Rotate({ threshold: 0 })).recognizeWith(mc.get('pan'));
+        mc.add(new Hammer.Pinch({ threshold: 0 })).recognizeWith([mc.get('pan'), mc.get('rotate')]);
+        //结束时做一些处理
+        mc.on("hammer.input", function(ev) {
+            if(ev.isFinal) {
+            console.log(START_X+"  "+transform.translate.x  +"   "+ev.deltaX);
+            START_X = transform.translate.x ;
+            START_Y = transform.translate.y ;
+            }
+            
+        });
+        mc.on("panstart panmove", onPan);
+        mc.on("rotatestart rotatemove rotateend", onRotate);
+        mc.on("pinchstart pinchmove", onPinch);
+        /**
+        第二次进入拖拽时  delta位移重置
+        移动时 初始位置startxy不动。delta增加
+        */
+        function onPan(ev){
+            if(!ev.isFinal) {
+             el.className = '';
+                console.log(START_X   +"  "+  START_Y +" |  "+ev.deltaX   +"  "+  ev.deltaY);       
+                    transform.translate = {
+                        x: START_X + ev.deltaX,
+                        y: START_Y + ev.deltaY
+                    };
+                    requestElementUpdate();
+            }      
+        }
+
+        function onPinch(ev){
+            if(ev.type == 'pinchstart') {
+                initScale = transform.scale || 1;
+            }
+            el.className = '';
+            transform.scale = initScale * ev.scale;
+            requestElementUpdate(); 
+        }
+
+        //旋转相关
+        var  preAngle =0 ;
+        var  tempAngleFlag=0;
+        var  deltaAngle = 0;    
+        var  startRotateAngle = 0;
+
+        function onRotate(ev) {
+            
+            //点下第二个触控点时触发
+            if(ev.type == 'rotatestart') {              
+                    startRotateAngle =  ev.rotation ;            
+                    tempAngleFlag = 0 ;
+            }   
+            if(ev.type == 'rotatemove'){
+                if(tempAngleFlag == 0){
+                    preAngle = startRotateAngle;
+                    tempAngleFlag ++;
+                }else{              
+                    deltaAngle = ev.rotation - preAngle;
+                    el.className = '';
+                    transform.rz = 1;  //非0  垂直xy轴
+                    transform.angle =initAngle + deltaAngle;                                    
+                    requestElementUpdate(); 
+                }
+            }
+                
+            //旋转结束  记录当前图片角度    
+            if(ev.type =='rotateend'){
+                initAngle = transform.angle;
+            }   
+        }
+
+
+        function updateElementTransform() {
+            var value = [
+                        'translate3d(' + transform.translate.x + 'px, ' + transform.translate.y + 'px, 0)',
+                        'scale(' + transform.scale + ', ' + transform.scale + ')',
+                        'rotate3d('+ transform.rx +','+ transform.ry +','+ transform.rz +','+  transform.angle + 'deg)'
+            ];
+
+            value = value.join(" ");
+            el.style.webkitTransform = value;  /*为Chrome/Safari*/
+            el.style.mozTransform = value; /*为Firefox*/
+            el.style.transform = value; /*IE Opera?*/
+            ticking = false;
+        }
+
+        function requestElementUpdate() {
+            if(!ticking) {
+                reqAnimationFrame(updateElementTransform);
+                ticking = true;
+            }
+        }
+
+        /**
+        初始化设置
+        */
+        function resetElement() {
+
+            el.className = 'animate';
+             transform = {
+                translate: { x: START_X, y: START_Y },
+                scale: 1,
+                angle: 0,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            };
+            requestElementUpdate();
+        }
+
+        resetElement();
+
+    </script>
+</body>
+</html>

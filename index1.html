@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script>
+        document.documentElement.style.fontSize = Math.max(window.innerWidth, window.innerHeight)/19.2 + 'px';
+    </script>
+    <style>
+        .t{
+            width: 100px;
+            height: 330px;
+            overflow: hidden;
+            background-color: #ccc;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .t::before{
+            content: '';
+            width: 200px;
+            height: 100px;
+            background-color: red;
+            display: block;
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="t"></div> 
+<script src="js/base.js"></script>
+</body>
+</html>
