@@ -222,10 +222,10 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide swiper-slide-center none-effect"><a href="#"><img src="images/top_hero_conc_2017.jpg" ></a></div>
-            <div class="swiper-slide"><a href="#"><img src="images/top_hero_cs_2017.jpg" ></a></div>
-            <div class="swiper-slide"><a href="#"><img src="images/top_hero_cw_im17.jpg" ></a></div>
-            <div class="swiper-slide"><a href="#"><img src="images/top_hero_hakko.jpg" ></a></div>
-            <div class="swiper-slide"><a href="#"><img src="images/top_hero_karadacalpis_im02.jpg" ></a></div>
+            <div class="swiper-slide"><a href="#"><img src="http://yue08.sogoucdn.com/cdn/web/image/2017/10/10/20171010173002_9477.jpg" ></a></div>
+            <div class="swiper-slide"><a href="#"><img src="http://yue08.sogoucdn.com/cdn/web/image/2017/10/10/20171010173002_9477.jpg" ></a></div>
+            <div class="swiper-slide"><a href="#"><img src="http://yue08.sogoucdn.com/cdn/web/image/2017/10/10/20171010173002_9477.jpg" ></a></div>
+            <div class="swiper-slide"><a href="#"><img src="http://yue08.sogoucdn.com/cdn/web/image/2017/10/10/20171010173002_9477.jpg" ></a></div>
         </div>
         
     </div>
@@ -255,8 +255,11 @@
         onInit:function(swiper){
             swiper.slides[2].className="swiper-slide swiper-slide-active";//第一次打开不要动画
             },
- 
-        });
+ progress: function(progress) {
+            console.log(progress,this.slides.length )
+
+ }
+        })
         }
     </script>
 </body>

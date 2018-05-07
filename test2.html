@@ -110,16 +110,11 @@ certifySwiper = new Swiper('#certify .swiper-container', {
     loop: true,
     loopedSlides: 5,
     autoplay: true,
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-    pagination: {
-        el: '.swiper-pagination',
-        //clickable :true,
-    },
+    slidePrevClass : 'my-slide-prev',
+    slideNextClass : 'my-slide-next',
     on: {
         progress: function(progress) {
+            console.log(progress,this.slides.length )
             for (i = 0; i < this.slides.length; i++) {
                 var slide = this.slides.eq(i);
                 var slideProgress = this.slides[i].progress;

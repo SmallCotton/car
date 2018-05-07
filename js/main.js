@@ -302,7 +302,6 @@ $(function(){
     });
 
 
-
     var hammerdiv1 = new Hammer(document.getElementById("div1"));
         hammerdiv1.get("pinch").set({ enable: true });
         
@@ -360,7 +359,7 @@ $(function(){
         }
     });
 
-    //风向调控 fengxiangmove =========================问题暂时放着 困了....=====================================
+    //风向调控
     var fxmv = {};
     var $mc2 = $('.div12 .mc2');
     $('.div12').on({
@@ -607,51 +606,24 @@ $(function(){
         });
 
     //切换歌曲
-    // var swiper = new Swiper('.swiper-container',{
-    //     autoplay:3000,
-    //     speed:1000,
-    //     autoplayDisableOnInteraction : false,
-    //     loop:true,
-    //     centeredSlides : true,
-    //       slidesPerView: 'auto',
-       
-    //     });
-certifySwiper = new Swiper('.swiper-container', {
-    watchSlidesProgress: true,
-    slidesPerView: 'auto',
-    centeredSlides: true,
-    loop: true,
-    loopedSlides: 5,
-    on: {
-        progress: function(progress) {
-            for (i = 0; i < this.slides.length; i++) {
-                var slide = this.slides.eq(i);
-                var slideProgress = this.slides[i].progress;
-                modify = 1;
-                if (Math.abs(slideProgress) > 1) {
-                    modify = (Math.abs(slideProgress) - 1) * 0.3 + 1;
-                }
-                translate = slideProgress * modify * 260 + 'px';
-                scale = 1 - Math.abs(slideProgress) / 5;
-                zIndex = 999 - Math.abs(Math.round(10 * slideProgress));
-                slide.transform('translateX(' + translate + ') scale(' + scale + ')');
-                slide.css('zIndex', zIndex);
-                slide.css('opacity', 1);
-                if (Math.abs(slideProgress) > 3) {
-                    slide.css('opacity', 0);
+    var swiper = new Swiper('.swiper-container',{
+            autoplay:3000,
+            speed:1000, 
+            loop:true,
+            centeredSlides : true,
+            slidesPerView: 5,
+            slidePrevClass : 'slide-active-prev',
+            slideNextClass : 'slide-active-next',
+            on: {
+                slideChangeTransitionStart: function(){
+
+                },
+                slideChangeTransitionEnd: function(){
+
                 }
             }
-        },
-        setTransition: function(transition) {
-            for (var i = 0; i < this.slides.length; i++) {
-                var slide = this.slides.eq(i)
-                slide.transition(transition);
-            }
-
-        }
-    }
-
-})
+        });
+ 
 
     /*页面对浏览器默认事件做的各种兼容=======================================================*/
     $('.div0, .pg1, .pg2').on('touchstart touchmove touchend', function(e){
