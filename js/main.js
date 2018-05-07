@@ -52,10 +52,18 @@ $(function(){
         }  
     };
 
+    var $video = $('#video')[0];
     $('.nav-tab>a').on('touchend', function(e){
         e.preventDefault();
         e.stopPropagation();
-        document.body.className = 'pg'+$(this).index()+'show';
+        var index = $(this).index();
+        document.body.className = 'pg'+ index +'show';
+        if (index==3) {
+            $video.play();
+        }else{
+            $video.pause();
+            $video.currentTime = 0;
+        }
     });
     $('.tiplock').on('touchend', function(e){
         e.preventDefault();
@@ -69,10 +77,7 @@ $(function(){
         e.stopPropagation();
         location.reload();
     });
-    // $('.back').on('touchend', function(e){
-    //     document.body.className = 'pg0show';
-    //     init0();
-    // });
+
 
 
     /*第0屏==================================================================================*/
@@ -224,6 +229,11 @@ $(function(){
         init01();
     });
 
+    $('.div01 .back').on('touchend', function(e){
+        document.body.className = 'pg0show';
+        init0();
+    });
+
     //删除功能
     var deleteFn = {
         touchstart: function(e){
@@ -294,11 +304,14 @@ $(function(){
 
     /*第1屏==================================================================================*/
 
+    var siteNum = 0;
+
     $('.sitmap span').on('touchend', function(e){
         e.preventDefault();
         e.stopPropagation();
         $(this).addClass('sel').siblings().removeClass('sel');
         $('.sub11 .mc, .sub10 .mc')[0].className = ('mc m'+$(this).index());
+        siteNum = $(this).index();
     });
 
 
@@ -308,14 +321,39 @@ $(function(){
 
         hammerdiv1.on('panend', function(e) {
             if (e.maxPointers ==1) {
+
                 document.body.className = 'pg1show pg1sub0';
+                initSubdata(0);
+
+                tools.timer(false, function(){
+                    document.body.className = 'pg1show';
+                    tools.timer(true);
+                }, 2000);
+
             }else if(e.maxPointers ==3){
+
                 document.body.className = 'pg1show pg1sub2';
+                initSubdata(2);
+
+                tools.timer(false, function(){
+                    document.body.className = 'pg1show';
+                    tools.timer(true);
+                }, 2000);
+
             }
         });
 
         hammerdiv1.on("pinchend", function (e) {
+
             document.body.className = 'pg1show pg1sub1';
+            initSubdata(1);
+
+
+            tools.timer(false, function(){
+                document.body.className = 'pg1show';
+                tools.timer(true);
+            }, 2000);
+
         });
  
 
@@ -347,11 +385,19 @@ $(function(){
                 $('.deg-num>em').removeClass('sel');
                 $('.deg-num>em')[n].className = 'sel';
                 $('.deg-num').scrollLeft(rate*0.8*roots);
+
+                //存数据
+                subdata[siteNum][0].xt = degmove.xt;
+                subdata[siteNum][0].n = n;
+                subdata[siteNum][0].sl = rate*0.8*roots;
+
             }
 
         },
         touchend: function(e){
             e.preventDefault();
+            e.stopPropagation();
+
             tools.timer(false, function(){
                 document.body.className = 'pg1show';
                 tools.timer(true);
@@ -364,11 +410,14 @@ $(function(){
     var $mc2 = $('.div12 .mc2');
     $('.div12').on({
         touchstart: function(e){
+
             e.preventDefault();
             e.stopPropagation();
             fxmv.y0 = e.changedTouches[0].pageY;
             fxmv.down = 0;
             fxmv.up = 0;
+            tools.timer(true);
+
         },
         touchmove: function(e){
             e.preventDefault();
@@ -391,12 +440,21 @@ $(function(){
 
             $mc2.css({'height': h/roots + 'rem'});
 
+            //存数据
+            subdata[siteNum][1] = h/roots;
+
         },
         touchend: function(e){
             e.preventDefault();
             e.stopPropagation();
             fxmv.down = 0;
             fxmv.up = 0;
+
+            tools.timer(false, function(){
+                document.body.className = 'pg1show';
+                tools.timer(true);
+            }, 2000);
+
         }
     });
 
@@ -414,19 +472,25 @@ $(function(){
             }
             else if (e.type == 'pinchin') {
                 //console.log(e);
-                var num = fannum - parseInt(e.scale*10);
-                $fannum.html(Math.max(0, num));
+                var num = Math.max(0, fannum - parseInt(e.scale*10));
+
+                $fannum.html(num);
                 //$fannum.html(e.scale);
                 $fan.addClass('sel');
+
+                subdata[siteNum][1] = num;
             }
             else if (e.type == 'pinchout') {
-                var num = fannum + parseInt((e.scale-1)*10);
-                $fannum.html(Math.min(100, num));
+                var num = Math.min(100, fannum + parseInt((e.scale-1)*10));
+                $fannum.html(num);
                 //$fannum.html(e.scale);
                 $fan.addClass('sel');
+                subdata[siteNum][1] = num;
+
             }
             else if (e.type == 'pinchend') {
                 $fan.removeClass('sel');
+
                 tools.timer(false, function(){
                     document.body.className = 'pg1show';
                     tools.timer(true);
@@ -434,7 +498,32 @@ $(function(){
             }
 
         });
- 
+     
+
+    //数据记录
+    var subdata = [[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0]]; // 温度 风向 风速
+
+    //初始化subdata
+    var initSubdata = function(x){
+
+        if (x==0) {
+            //温度
+            degbox.css({'transform': 'translateX('+ subdata[siteNum][0].xt +'px)', '-webkit-transform': 'translateX('+ subdata[siteNum][0].xt +'px)'})
+            $('.deg-num>em')[subdata[siteNum][0].n].className = 'sel';
+            $('.deg-num').scrollLeft(subdata[siteNum][0].sl);
+
+        }else if (x==2) {
+            //风向调控
+            $mc2.css({'height': subdata[siteNum][1] + 'rem'});
+        }else if (x==1) {
+            //缩放调节风速
+            $fannum.html(subdata[siteNum][1]);
+        }
+
+
+
+
+    };
 
     /*第2屏==================================================================================*/
 
@@ -500,7 +589,7 @@ $(function(){
     var $div2 = $('#div2');
 
     var myAudio = new AudioFn({
-        src: 'img/2/sc/1.mp3'
+        src: 'img/2/sc/0.mp3'
     });
     $('#stop').on('touchend', function(e){
         e.preventDefault();
@@ -542,6 +631,31 @@ $(function(){
             myAudio.voice(audioObj.voice);
         });
         
+        //切换歌曲
+        var myswiper = new Swiper('.swiper-container',{
+            speed: 1000, 
+            loop: true,
+            centeredSlides : true,
+            slidesPerView: 5,
+            slidePrevClass : 'slide-active-prev',
+            slideNextClass : 'slide-active-next',
+            on: {
+                touchStart: function(){
+                    tools.timer(true);
+
+                },
+                touchEnd: function(){
+
+                    audioObj.num = parseInt($('.swiper-slide-active').data('num'));
+                    tools.timer(false, function(){
+                        myAudio.reset2('img/2/sc/'+audioObj.num+'.mp3', 'img/2/sc/'+audioObj.num+'.jpg');
+                        initVoiceResource();
+                        document.body.className = 'pg2show';
+                        tools.timer(true);
+                    }, 2000);
+                }
+            }
+        });
         //切换音源    
         var $word = $('.word');
         var xid = 0;
@@ -564,7 +678,10 @@ $(function(){
                             '-webkit-transform': 'translateY('+xid*100/3+'%)'
                         }); 
                     }else if (e.additionalEvent=='panleft'||e.additionalEvent=='panright'){
+                        
                         document.body.className = 'pg2show pg2sub';
+                        myswiper.slideToLoop(audioObj.num, 1000, false);
+
                     }
                     $('#blackbox')[0].className = 'black-box ct sel'+(xid+1);
 
@@ -578,7 +695,15 @@ $(function(){
                 }
             }
         });
-
+        //音源初始化
+        function initVoiceResource(){
+            xid = 0;
+            $('#blackbox')[0].className = 'black-box ct';
+            $div2[0].className = 'div2 sec pause';
+            $('.word').css({
+                '-webkit-transform': 'translateY(0)'
+            }); 
+        }
 
     //快进 快退    
     var hmraybox = new Hammer(document.getElementById("raybox"));
@@ -605,28 +730,16 @@ $(function(){
 
         });
 
-    //切换歌曲
-    var swiper = new Swiper('.swiper-container',{
-            autoplay:3000,
-            speed:1000, 
-            loop:true,
-            centeredSlides : true,
-            slidesPerView: 5,
-            slidePrevClass : 'slide-active-prev',
-            slideNextClass : 'slide-active-next',
-            on: {
-                slideChangeTransitionStart: function(){
+    // 第3屏=========================================================
 
-                },
-                slideChangeTransitionEnd: function(){
-
-                }
-            }
-        });
+    $('#tishow').on('touchend', function(e){
+        $(this).toggleClass('sel');
+        $('.tipimg').toggle();
+    });
  
 
     /*页面对浏览器默认事件做的各种兼容=======================================================*/
-    $('.div0, .pg1, .pg2').on('touchstart touchmove touchend', function(e){
+    $('.div0, .pg1, .pg2, .pg3').on('touchstart touchmove touchend', function(e){
         e.preventDefault();
         // e.stopPropagation();
     });
