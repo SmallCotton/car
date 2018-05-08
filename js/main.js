@@ -643,30 +643,73 @@ $(function(){
         });
         
         //切换歌曲
-        var myswiper = new Swiper('.swiper-container',{
-            speed: 1000, 
-            loop: true,
-            centeredSlides : true,
-            slidesPerView: 5,
-            slidePrevClass : 'slide-active-prev',
-            slideNextClass : 'slide-active-next',
-            on: {
-                touchStart: function(){
-                    tools.timer(true);
+        function swiperFn(){
+            var html = '<div class="swiper-container"><div class="swiper-wrapper">';
+            for(var i = 0; i<5; i++){
+                var cl = 'swiper-slide';
+                if (i==audioObj.num) {
 
-                },
-                touchEnd: function(){
+                    console.log(audioObj.num, 'eeee', i);
 
-                    audioObj.num = parseInt($('.swiper-slide-active').data('num'));
-                    tools.timer(false, function(){
-                        myAudio.reset2('img/2/sc/'+audioObj.num+'.mp3', 'img/2/sc/'+audioObj.num+'.jpg');
-                        initVoiceResource();
-                        document.body.className = 'pg2show';
-                        tools.timer(true);
-                    }, 2000);
+                    //cl = 'swiper-slide swiper-slide-active';
                 }
+                html +=  '<div class="' + cl + '" >' +
+                            '<div class="ray-box">' +
+                                '<div class="gif2-box">' +
+                                    '<div class="black-box ct">' +
+                                        '<img src="img/2/sc/'+i+'.jpg" class="ct">' +
+                                    '</div>' +
+                                    '<div class="o ct"></div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
             }
-        });
+
+            html += '</div></div>';
+            $('#myswipercon').html(html);
+            new Swiper('.swiper-container',{
+                speed: 1000, 
+                loop: true,
+                centeredSlides : true,
+                slidesPerView: 5,
+                slidePrevClass : 'slide-active-prev',
+                slideNextClass : 'slide-active-next',
+                on: {
+                    touchStart: function(){
+                        tools.timer(true);
+
+                    },
+                    touchEnd: function(){
+
+                        var ri = this.realIndex;
+                        if (this.realIndex==4) {
+                            ri = 0;
+                        }else {
+                            ri = ri+1;
+                        }
+
+                        audioObj.num = ri;
+
+                        console.log(audioObj.num, this.realIndex, 'this.realIndex');
+
+                        tools.timer(false, function(){
+                            myAudio.reset2('img/2/sc/'+audioObj.num+'.mp3', 'img/2/sc/'+audioObj.num+'.jpg');
+                            console.log(audioObj.num,'tt');
+                            initVoiceResource();
+                            document.body.className = 'pg2show';
+                            $('#myswipercon').html('');
+                            tools.timer(true);
+
+                        }, 2000);
+
+                    }
+                }
+            });
+            myswiper.slideToLoop(audioObj.num, 1000, false);
+
+
+        }
+
         //切换音源    
         var $word = $('.word');
         var xid = 0;
@@ -691,7 +734,8 @@ $(function(){
                     }else if (e.additionalEvent=='panleft'||e.additionalEvent=='panright'){
                         
                         document.body.className = 'pg2show pg2sub';
-                        myswiper.slideToLoop(audioObj.num, 1000, false);
+                        swiperFn();
+                        //myswiper.slideToLoop(audioObj.num, 1000, false);
 
                     }
                     $('#blackbox')[0].className = 'black-box ct sel'+(xid+1);
@@ -750,9 +794,9 @@ $(function(){
  
 
     /*页面对浏览器默认事件做的各种兼容=======================================================*/
-    $('.div0, .pg1, .pg2, .pg3').on('touchstart touchmove touchend', function(e){
+    $('.div0, .pg1, .pg2, .pg3, .tools0b').on('touchstart touchmove touchend', function(e){
         e.preventDefault();
-        // e.stopPropagation();
+        e.stopPropagation();
     });
     
     $('.nav-tab').on('touchend', function(e){
