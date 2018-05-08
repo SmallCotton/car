@@ -12,7 +12,7 @@
         document.documentElement.style.fontSize = Math.max(window.innerWidth, window.innerHeight)/19.2 + 'px';
     </script>
 </head>
-<body class="pg0show">
+<body class="pg3show">
     <!-- 第0屏begin -->
     <div class="pg0 page">
 
@@ -112,6 +112,7 @@
             <div class="tip tip13"></div>
 
             <a href="javascript:void(0)" class="tiplock ico ico-2"></a>
+            <a href="javascript:void(0)" class="reload ico ico-8"></a>
             <div class="nav-tab">
                 <a href="javascript:void(0)" class="ico ico-3"></a>
                 <a href="javascript:void(0)" class="ico ico-4 sel"></a>
@@ -296,10 +297,7 @@
     <!-- 第3屏begin -->
     <div class="pg3 page">
         <div class="div3 sec">
-            <video style="width:100%;height:100%;object-fit: fill" id="video">
-              <source src="img/3/0.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+            <video style="width:100%;height:100%;object-fit: fill;display: block;z-index: 11;" src="img/3/0.mp4" id="video"></video>
             <div class="tipimg"></div>
             <a href="javascript:void(0)" class="ico ico-2" id="tishow"></a>
             <a href="javascript:void(0)" class="reload ico ico-8"></a>
@@ -315,7 +313,5 @@
 <script src="js/base.js"></script>
 <script src="js/main.js"></script>
 <!-- <script src="js/vconsole.js"></script> -->
-<script>
-</script>
 </body>
 </html>

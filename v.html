@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+ video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+    </style>
+</head>
+<body id="popupVideo">
+ 
+</body>
+<script src="js/base.js"></script>
+<script src="js/main.js"></script>
+<script >
+     var $video = '<video src="img/3/0.mp4" preload controls></video>';
+     $('#popupVideo').html($video);
+        $video = $('#popupVideo').find('video').get(0);
+
+        $video.play();
+</script>
+</html>
+<!-- 
+    天天打波利
+http://g.sogou.com/activity/2016/poring/index.html
+ -->

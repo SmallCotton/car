@@ -92,22 +92,31 @@ $(function(){
     var axisAdrr = []; 
     var tempSC = 0;
 
+    //预加载地点
+    var previmg = [];  
+    for (i = 0; i < 8; i++) {
+        previmg[i] = new Image();
+        previmg[i].src = './img/state/'+i+'.jpg';
+        // console.log(previmg);
+    }  
+
     var wsc = $stateCircle.width();
     var scarr = [(wh-wsc)/2, (ww+wsc)/2, (wh+wsc)/2, (ww-wsc)/2];
     var map= ['颐和园东宫门', '海淀公园', '中关村', '北京大学东门', '五道口', '清华东路西口', '清华大学二校门', '圆明园南门'];
     var mapTip = ['1公里，约2分钟','2公里，约4分钟','3公里，约6分钟','4公里，约8分钟','5公里，约10分钟','6公里，约12分钟','7公里，约14分钟','8公里，约16分钟'];
-    $div01.on('scroll', _.debounce(function(e){
+    
+    $div01.on('scroll', function(e){
         $spot.each(function(i, e){
             var cr = e.getBoundingClientRect();
             if (cr.top>scarr[0] && cr.right<scarr[1]  && cr.bottom<scarr[2] && cr.left>scarr[3]) {
-                $('#circleImg').attr('src', 'img/state/'+i+'.jpg');
+                $('#circleImg').attr('src', './img/state/'+i+'.jpg');
                 $('#circleAddr').html(map[i]);
                 $('#mapTip').html(mapTip[i]);
                 tempSC = i;
             }
         });
-    },30));
-
+    });
+    
     var init0 = function(){
         
         //轴线
@@ -310,7 +319,10 @@ $(function(){
         e.preventDefault();
         e.stopPropagation();
         $(this).addClass('sel').siblings().removeClass('sel');
-        $('.sub11 .mc, .sub10 .mc')[0].className = ('mc m'+$(this).index());
+        var cn = ('mc m'+$(this).index());
+        $('.win-box .mc')[0].className = cn;
+        $('.sub10 .mc')[0].className = cn;
+
         siteNum = $(this).index();
     });
 
@@ -338,7 +350,7 @@ $(function(){
                 tools.timer(false, function(){
                     document.body.className = 'pg1show';
                     tools.timer(true);
-                }, 2000);
+                }, 4000);
 
             }
         });
@@ -348,11 +360,10 @@ $(function(){
             document.body.className = 'pg1show pg1sub1';
             initSubdata(1);
 
-
-            tools.timer(false, function(){
-                document.body.className = 'pg1show';
-                tools.timer(true);
-            }, 2000);
+            // tools.timer(false, function(){
+            //     document.body.className = 'pg1show';
+            //     tools.timer(true);
+            // }, 2000);
 
         });
  
@@ -722,7 +733,7 @@ $(function(){
                 //console.log(ct, rotatePa.dt);
                 if (rotatePa.dt>0) {
                     myAudio.progress(Math.min(myAudio.duration(), ct + rotatePa.dt/50));
-                }else{ 
+                }else{
                     myAudio.progress(Math.max(0, ct + rotatePa.dt/50));
                 }
                 
