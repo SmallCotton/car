@@ -778,43 +778,91 @@ function sitmapstatus(i){
         //切换音源    
         var $word = $('.word');
         var xid = 0;
-        hm2.on('panstart panend', function(e) {
+        hm2.on('panstart panmove panend', function(e) {
             if(e.maxPointers ==1){
-                if (e.type=='panstart') {
-                    $div2[0].className = 'div2 sec black';
+
+                if (e.type=='panmove') {
+                  
+
+                    if (e.additionalEvent=='pandown' || e.additionalEvent=='panup') {
+                        $div2[0].className = 'div2 sec black play';
+                    }
+                    
                     //$('#pause').trigger('touchend');
 
                 }else if(e.type=='panend'){
-                    if (e.additionalEvent=='pandown') {
-                        xid = Math.min(1,  xid+1);
-                        $('.word').css({ 
-                            '-webkit-transform': 'translateY('+xid*100/3+'%)'
-                        });
+                    //console.log(e, 'panend')
 
-                    }else if (e.additionalEvent=='panup') {
-                        xid = Math.max(-1, xid-1);
-                        $('.word').css({
-                            '-webkit-transform': 'translateY('+xid*100/3+'%)'
-                        }); 
-                    }else if (e.additionalEvent=='panleft'||e.additionalEvent=='panright'){
-                        
+                    if(e.additionalEvent=='panleft'||e.additionalEvent=='panright'){
                         document.body.className = 'pg2show pg2sub';
                         swiperFn();
-                        //myswiper.slideToLoop(audioObj.num, 1000, false);
-
-                    }
-                    $('#blackbox')[0].className = 'black-box ct sel'+(xid+1);
-
-                    if (xid==-1) {
-                        myAudio.reset('img/2/sc/ph.mp3');
-                        $div2[0].className = 'div2 sec play';
-                    }else if (xid==1) {
-                        myAudio.reset('img/2/sc/fm.mp3');
-                        $div2[0].className = 'div2 sec play';
                     }else{
-                        myAudio.reset('img/2/sc/'+audioObj['num']+'.mp3');
-                        $div2[0].className = 'div2 sec play';
+                        tools.timer(true);
+                    
+                        if (e.additionalEvent=='pandown') {
+                            xid = Math.min(1,  xid+1);
+                            $('.word').css({ 
+                                '-webkit-transform': 'translateY('+xid*100/3+'%)'
+                            });
+
+                        }else if (e.additionalEvent=='panup') {
+                            xid = Math.max(-1, xid-1);
+                            $('.word').css({
+                                '-webkit-transform': 'translateY('+xid*100/3+'%)'
+                            }); 
+                        }
+
+                        $('#blackbox')[0].className = 'black-box ct sel'+(xid+1);
+
+                        if (xid==-1) {
+                            myAudio.reset('img/2/sc/ph.mp3');
+                        }else if (xid==1) {
+                            myAudio.reset('img/2/sc/fm.mp3');
+                        }else{
+                            myAudio.reset('img/2/sc/'+audioObj['num']+'.mp3');
+                        }
+
+                        tools.timer(false, function(){
+                            $div2[0].className = 'div2 sec play';
+                            tools.timer(true);
+                        }, 2000);
+
                     }
+                    
+
+
+                    
+                    
+                    // if (e.additionalEvent=='pandown') {
+                    //     xid = Math.min(1,  xid+1);
+                    //     $('.word').css({ 
+                    //         '-webkit-transform': 'translateY('+xid*100/3+'%)'
+                    //     });
+
+                    // }else if (e.additionalEvent=='panup') {
+                    //     xid = Math.max(-1, xid-1);
+                    //     $('.word').css({
+                    //         '-webkit-transform': 'translateY('+xid*100/3+'%)'
+                    //     }); 
+                    // }else if (e.additionalEvent=='panleft'||e.additionalEvent=='panright'){
+                        
+                    //     document.body.className = 'pg2show pg2sub';
+                    //     swiperFn();
+                    //     //myswiper.slideToLoop(audioObj.num, 1000, false);
+
+                    // }
+                    // $('#blackbox')[0].className = 'black-box ct sel'+(xid+1);
+
+                    // if (xid==-1) {
+                    //     myAudio.reset('img/2/sc/ph.mp3');
+                    //     $div2[0].className = 'div2 sec play';
+                    // }else if (xid==1) {
+                    //     myAudio.reset('img/2/sc/fm.mp3');
+                    //     $div2[0].className = 'div2 sec play';
+                    // }else{
+                    //     myAudio.reset('img/2/sc/'+audioObj['num']+'.mp3');
+                    //     $div2[0].className = 'div2 sec play';
+                    // }
                 }
             }
         });
