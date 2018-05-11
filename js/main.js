@@ -52,18 +52,18 @@ $(function(){
         }  
     };
 
-    var $video = $('#video')[0];
+    //var $video = $('#video')[0];
     $('.nav-tab>a').on('touchend', function(e){
         e.preventDefault();
         e.stopPropagation();
         var index = $(this).index();
         document.body.className = 'pg'+ index +'show';
-        if (index==3) {
-            $video.play();
-        }else{
-            $video.pause();
-            $video.currentTime = 0;
-        }
+        // if (index==3) {
+        //     $video.play();
+        // }else{
+        //     $video.pause();
+        //     $video.currentTime = 0;
+        // }
     });
     $('.tiplock').on('touchend', function(e){
         e.preventDefault();
@@ -210,10 +210,13 @@ $(function(){
  
     $('#stateCircle .yes').on('touchend', function(){
 
-        if (axisAdrr.indexOf(tempSC)<0 && (axisAdrr.length==0 || axisAdrr[axisAdrr.length-1]<tempSC)){
+        //if (axisAdrr.indexOf(tempSC)<0 && (axisAdrr.length==0 || axisAdrr[axisAdrr.length-1]<tempSC)){
 
             $div01.removeClass('active');
             axisAdrr.push(tempSC);
+            axisAdrr.sort();
+            axisAdrr = _.uniq(axisAdrr);
+            //console.log(axisAdrr, 'axisAdrr');
             $('.addcir').remove();
             $axis01.append('<div class="addcir1 ct"><span><em>'+map[tempSC]+'</em></span></div>');
 
@@ -221,11 +224,11 @@ $(function(){
                 document.body.className = 'pg0show';
                 init0();
                 
-            }, 1000);
+            }, 500);
 
-        }else{
-            tools.toast('您选的站点已经路过了哦～');
-        }
+        // }else{
+        //     tools.toast('您选的站点已经路过了哦～');
+        // }
         
     });
     $('#stateCircle .no').on('touchend', function(){
@@ -315,58 +318,108 @@ $(function(){
 
     var siteNum = 0;
 
-    $('.sitmap span').on('touchend', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).addClass('sel').siblings().removeClass('sel');
-        var cn = ('mc m'+$(this).index());
-        $('.win-box .mc')[0].className = cn;
-        $('.sub10 .mc')[0].className = cn;
+    // $('.sitmap span').on('touchend', function(e){
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     $(this).addClass('sel').siblings().removeClass('sel');
+    //     var cn = ('mc m'+$(this).index());
+    //     $('.win-box .mc')[0].className = cn;
+    //     $('.sub10 .mc')[0].className = cn;
 
-        siteNum = $(this).index();
-    });
+    //     siteNum = $(this).index();
+    // });
+function sitmapstatus(i){
+    console.log(i)
+    var i = parseInt(i);
+    $('.sitmap span').removeClass('sel');
+    $('.sitmap span').eq(i).addClass('sel');
+    //_this.addClass('sel').siblings().removeClass('sel');
+    var cn = ('mc m'+i);
+    $('.win-box .mc')[0].className = cn;
+    $('.sub10 .mc')[0].className = cn;
+    siteNum = i;
+}
+    var hammerdiv = [];
+    for(var i=0;i<3;i++){
 
+        hammerdiv[i] = new Hammer(document.getElementById("part"+i));
+        hammerdiv[i].get("pinch").set({ enable: true });
 
-    var hammerdiv1 = new Hammer(document.getElementById("div1"));
-        hammerdiv1.get("pinch").set({ enable: true });
-        
+        hammerdiv[i].on('panstart panend panmove', function(e) {
 
-        hammerdiv1.on('panend', function(e) {
+            //console.log(e, 'ee')
             if (e.maxPointers ==1) {
+                if (e.type == 'panstart') {
+                    sitmapstatus((e.target.id).slice(4));
 
-                document.body.className = 'pg1show pg1sub0';
-                initSubdata(0);
-
-                tools.timer(false, function(){
-                    document.body.className = 'pg1show';
                     tools.timer(true);
-                }, 2000);
+                }
+                if (e.type == 'panend') {
+                     tools.timer(false, function(){
+                        document.body.className = 'pg1show';
+                        tools.timer(true);
+                    }, 3000);
+                }
+                //(e.additionalEvent=="panup" || e.additionalEvent=="pandown")
+                if (e.additionalEvent=="panleft" || e.additionalEvent=="panright") {
+                    //console.log((e.target.id), (e.target.id).slice(4))
+                    //sitmapstatus((e.target.id).slice(4));
+                    document.body.className = 'pg1show pg1sub0';
+                    initSubdata(0);
+ 
+                }else if(e.additionalEvent=="panup" || e.additionalEvent=="pandown"){
 
-            }else if(e.maxPointers ==3){
+                    //sitmapstatus((e.target.id).slice(4));
+                    document.body.className = 'pg1show pg1sub2';
+                    initSubdata(2);
 
-                document.body.className = 'pg1show pg1sub2';
-                initSubdata(2);
-
-                tools.timer(false, function(){
-                    document.body.className = 'pg1show';
-                    tools.timer(true);
-                }, 4000);
-
+                }
             }
         });
 
-        hammerdiv1.on("pinchend", function (e) {
+        hammerdiv[i].on("pinchstart", function (e) {
 
             document.body.className = 'pg1show pg1sub1';
             initSubdata(1);
 
-            // tools.timer(false, function(){
-            //     document.body.className = 'pg1show';
-            //     tools.timer(true);
-            // }, 2000);
-
         });
- 
+
+        // hammerdiv[i].on('panend', function(e) {
+        //     if (e.maxPointers ==1) {
+
+        //         document.body.className = 'pg1show pg1sub0';
+        //         initSubdata(0);
+
+        //         tools.timer(false, function(){
+        //             document.body.className = 'pg1show';
+        //             tools.timer(true);
+        //         }, 2000);
+
+        //     }else if(e.maxPointers ==3){
+
+        //         document.body.className = 'pg1show pg1sub2';
+        //         initSubdata(2);
+
+        //         tools.timer(false, function(){
+        //             document.body.className = 'pg1show';
+        //             tools.timer(true);
+        //         }, 4000);
+
+        //     }
+        // });
+
+        // hammerdiv[i].on("pinchend", function (e) {
+
+        //     document.body.className = 'pg1show pg1sub1';
+        //     initSubdata(1);
+
+        //     // tools.timer(false, function(){
+        //     //     document.body.className = 'pg1show';
+        //     //     tools.timer(true);
+        //     // }, 2000);
+
+        // });
+    }
 
     var div1sub = {};    
         
@@ -412,7 +465,7 @@ $(function(){
             tools.timer(false, function(){
                 document.body.className = 'pg1show';
                 tools.timer(true);
-            }, 2000);
+            }, 1000);
         }
     });
 
@@ -464,7 +517,7 @@ $(function(){
             tools.timer(false, function(){
                 document.body.className = 'pg1show';
                 tools.timer(true);
-            }, 2000);
+            }, 1000);
 
         }
     });
@@ -505,7 +558,7 @@ $(function(){
                 tools.timer(false, function(){
                     document.body.className = 'pg1show';
                     tools.timer(true);
-                }, 2000);
+                }, 1000);
             }
 
         });
@@ -560,6 +613,7 @@ $(function(){
         reset: function(src){
             this.ad.src = src;
             this.ad.preload = 'auto';
+            this.ad.play();
         },
         reset2: function(src, cover){
             this.ad.src = src;
@@ -629,17 +683,24 @@ $(function(){
     var hm2 = new Hammer(document.getElementById("div2"));
         hm2.get("pinch").set({ enable: true });
 
-        hm2.on("pinchin pinchout", function (e) {
+        hm2.on("pinchin pinchout pinchend", function (e) {
             
             if (!$div2.hasClass('play')) return false;
             if (!e.target.classList.contains('div2')) return false;
 
             if (e.type == 'pinchin') {
                 audioObj.voice = Math.max(0, audioObj.voice - e.scale/100);
+                $div2[0].className = 'div2 sec play loudy';
+                $('#vnum').html(Math.floor(audioObj.voice*10));
             }else if(e.type == 'pinchout'){
                 audioObj.voice = Math.min(1, audioObj.voice + e.scale/100);
+                $div2[0].className = 'div2 sec play loudy';
+                $('#vnum').html(Math.floor(audioObj.voice*10));
+            }else if (e.type == 'pinchend') {
+                $div2[0].className = 'div2 sec play';
             }
             myAudio.voice(audioObj.voice);
+
         });
         
         //切换歌曲
@@ -667,46 +728,39 @@ $(function(){
 
             html += '</div></div>';
             $('#myswipercon').html(html);
-            new Swiper('.swiper-container',{
-                speed: 1000, 
+            var myswiper = new Swiper('.swiper-container',{
+                initialSlide: audioObj.num,
+                // speed: 1000, 
                 loop: true,
                 centeredSlides : true,
                 slidesPerView: 5,
                 slidePrevClass : 'slide-active-prev',
                 slideNextClass : 'slide-active-next',
                 on: {
-                    touchStart: function(){
+                    slideChangeTransitionStart: function(){
                         tools.timer(true);
-
                     },
-                    touchEnd: function(){
-
+                    slideChangeTransitionEnd: function(){
                         var ri = this.realIndex;
-                        if (this.realIndex==4) {
-                            ri = 0;
-                        }else {
-                            ri = ri+1;
-                        }
-
+                        // if (this.realIndex==4) {
+                        //     ri = 0;
+                        // }else {
+                        //     ri = ri+1;
+                        // }
                         audioObj.num = ri;
-
-                        console.log(audioObj.num, this.realIndex, 'this.realIndex');
-
+                        //console.log(audioObj.num, this.realIndex, 'this.realIndex');
+                        //console.log(this.realIndex, 'realIndex', this.previousIndex, 'previousIndex', this.activeIndex, 'activeIndex')
                         tools.timer(false, function(){
-                            myAudio.reset2('img/2/sc/'+audioObj.num+'.mp3', 'img/2/sc/'+audioObj.num+'.jpg');
-                            console.log(audioObj.num,'tt');
+                            myAudio.reset2('img/2/sc/'+ ri +'.mp3', 'img/2/sc/'+ ri +'.jpg');
+                            //console.log(ri ,'tt');
                             initVoiceResource();
                             document.body.className = 'pg2show';
                             $('#myswipercon').html('');
                             tools.timer(true);
-
                         }, 2000);
-
                     }
                 }
             });
-            myswiper.slideToLoop(audioObj.num, 1000, false);
-
 
         }
 
@@ -716,7 +770,7 @@ $(function(){
         hm2.on('panstart panend', function(e) {
             if(e.maxPointers ==1){
                 if (e.type=='panstart') {
-                    $div2[0].className = 'div2 sec pause black';
+                    $div2[0].className = 'div2 sec black';
                     $('#pause').trigger('touchend');
 
                 }else if(e.type=='panend'){
@@ -742,10 +796,13 @@ $(function(){
 
                     if (xid==-1) {
                         myAudio.reset('img/2/sc/ph.mp3');
+                        $div2[0].className = 'div2 sec play';
                     }else if (xid==1) {
                         myAudio.reset('img/2/sc/fm.mp3');
+                        $div2[0].className = 'div2 sec play';
                     }else{
                         myAudio.reset('img/2/sc/'+audioObj['num']+'.mp3');
+                        $div2[0].className = 'div2 sec play';
                     }
                 }
             }
@@ -767,20 +824,23 @@ $(function(){
     var rotatePa = {};  
         hmraybox.on("rotatestart rotatemove rotateend", function(e){
              
-            if(e.type == 'rotatestart') {    
+            if(e.type == 'rotatestart') {
                 rotatePa.d0 =  e.rotation ;
                 $div2.addClass('goback');
             }else if(e.type == 'rotatemove') {
                 rotatePa.dt =  e.rotation - rotatePa.d0;
                 var ct = myAudio.currentTime();
                 
-                //console.log(ct, rotatePa.dt);
                 if (rotatePa.dt>0) {
                     myAudio.progress(Math.min(myAudio.duration(), ct + rotatePa.dt/50));
+                    $div2[0].className = 'div2 sec play go';
                 }else{
                     myAudio.progress(Math.max(0, ct + rotatePa.dt/50));
+                    $div2[0].className = 'div2 sec play back';
                 }
-                
+
+            }else if(e.type == 'rotateend') {
+                $div2[0].className = 'div2 sec play';
             }
 
         });

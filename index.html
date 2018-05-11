@@ -12,7 +12,7 @@
         document.documentElement.style.fontSize = Math.max(window.innerWidth, window.innerHeight)/19.2 + 'px';
     </script>
 </head>
-<body class="pg0show">
+<body class="pg1show">
     <!-- 第0屏begin -->
     <div class="pg0 page">
 
@@ -101,6 +101,10 @@
     <div class="pg1 page">
 
         <div class="div1 sec" id="div1">
+            <div class="part part0" id="part0"></div>
+            <div class="part part1" id="part1"></div>
+            <div class="part part2" id="part2"></div>
+
             <div class="sitmap ct">
                 <span class="sp1"></span>
                 <span class="sp2"></span>
@@ -205,10 +209,11 @@
                     <!-- 暂停 -->
                     <div class="stop ct" id="stop"></div>
                     <!-- 快进快退 -->
-                    <div class="goback"></div>
+                    <div class="goback ct"></div>
                     <!-- 音量调整 -->
-                    <div class="voice">
+                    <div class="voice ct">
                         <i></i>
+                        <em class="vnum" id="vnum">10</em>
                     </div>
                     <!-- 暂停层 -->
                     <a href="javascript:void(0)" class="pause ct" id="pause"></a>
@@ -297,7 +302,8 @@
     <!-- 第3屏begin -->
     <div class="pg3 page">
         <div class="div3 sec">
-            <video style="width:100%;height:100%;object-fit: fill;display: block;z-index: 11;" src="img/3/0.mp4" id="video"></video>
+            <!-- <video style="width:100%;height:100%;object-fit: fill;display: block;z-index: 11;" src="img/3/0.mp4" id="video"></video> -->
+            <div class="video"></div>
             <div class="tipimg"></div>
             <a href="javascript:void(0)" class="ico ico-2" id="tishow"></a>
             <a href="javascript:void(0)" class="reload ico ico-8"></a>
