@@ -872,8 +872,9 @@ html,body{
 .div12 .mc2 img{
     width: 4.18rem;
     height: 4.18rem;
-    display: block;
+    /*display: block;*/
     position: absolute;
+    display: none;
 }
 .div12 .mc2.down{
     background-size: 100% auto;
@@ -882,6 +883,7 @@ html,body{
 }
 .div12 .mc2.down img{
     top: 0;
+    display: block;
 }
 .div12 .mc2.up{
     background-size: 100% auto;
@@ -890,6 +892,7 @@ html,body{
 }
 .div12 .mc2.up img{
     bottom: 0;
+    display: block;
 }
 .div10{
     background-image: url(../img/1/bg2.jpg);

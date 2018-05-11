@@ -328,15 +328,18 @@ $(function(){
 
     //     siteNum = $(this).index();
     // });
+
+// 不同手势  进入相应模块
 function sitmapstatus(i){
     console.log(i)
     var i = parseInt(i);
     $('.sitmap span').removeClass('sel');
     $('.sitmap span').eq(i).addClass('sel');
-    //_this.addClass('sel').siblings().removeClass('sel');
     var cn = ('mc m'+i);
-    $('.win-box .mc')[0].className = cn;
-    $('.sub10 .mc')[0].className = cn;
+    $('.win-box .mc')[0].className = cn; //风速
+    $('.sub10 .mc')[0].className = cn; //温度
+    $('#rz')[0].className = 'rz rz'+i; //风向
+
     siteNum = i;
 }
     var hammerdiv = [];
@@ -360,16 +363,14 @@ function sitmapstatus(i){
                         tools.timer(true);
                     }, 3000);
                 }
-                //(e.additionalEvent=="panup" || e.additionalEvent=="pandown")
+
                 if (e.additionalEvent=="panleft" || e.additionalEvent=="panright") {
-                    //console.log((e.target.id), (e.target.id).slice(4))
-                    //sitmapstatus((e.target.id).slice(4));
+
                     document.body.className = 'pg1show pg1sub0';
                     initSubdata(0);
  
                 }else if(e.additionalEvent=="panup" || e.additionalEvent=="pandown"){
-
-                    //sitmapstatus((e.target.id).slice(4));
+                    
                     document.body.className = 'pg1show pg1sub2';
                     initSubdata(2);
 
@@ -378,6 +379,8 @@ function sitmapstatus(i){
         });
 
         hammerdiv[i].on("pinchstart", function (e) {
+
+            sitmapstatus((e.target.id).slice(4));
 
             document.body.className = 'pg1show pg1sub1';
             initSubdata(1);
@@ -505,7 +508,7 @@ function sitmapstatus(i){
             $mc2.css({'height': h/roots + 'rem'});
 
             //存数据
-            subdata[siteNum][1] = h/roots;
+            subdata[siteNum][2] = h/roots;
 
         },
         touchend: function(e){
@@ -542,6 +545,8 @@ function sitmapstatus(i){
                 //$fannum.html(e.scale);
                 $fan.addClass('sel');
 
+                
+
                 subdata[siteNum][1] = num;
             }
             else if (e.type == 'pinchout') {
@@ -549,6 +554,7 @@ function sitmapstatus(i){
                 $fannum.html(num);
                 //$fannum.html(e.scale);
                 $fan.addClass('sel');
+                
                 subdata[siteNum][1] = num;
 
             }
@@ -559,13 +565,14 @@ function sitmapstatus(i){
                     document.body.className = 'pg1show';
                     tools.timer(true);
                 }, 1000);
+
             }
 
         });
      
 
     //数据记录
-    var subdata = [[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0]]; // 温度 风向 风速
+    var subdata = [[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0],[{xt:0,n:0,sl:0},0,0]]; // 温度  风速 风向
 
     //初始化subdata
     var initSubdata = function(x){
@@ -578,7 +585,8 @@ function sitmapstatus(i){
 
         }else if (x==2) {
             //风向调控
-            $mc2.css({'height': subdata[siteNum][1] + 'rem'});
+            $mc2.css({'height': subdata[siteNum][2] + 'rem'});
+
         }else if (x==1) {
             //缩放调节风速
             $fannum.html(subdata[siteNum][1]);
@@ -619,6 +627,7 @@ function sitmapstatus(i){
             this.ad.src = src;
             $('#cover').attr('src', cover);
             this.ad.preload = 'auto';
+            this.ad.play();
         },
         play: function(){
             this.ad.play();
@@ -667,10 +676,10 @@ function sitmapstatus(i){
         e.preventDefault();
         e.stopPropagation();
 
-        if ($div2.hasClass('goback')){
-            $div2.removeClass('goback');
-            return false;
-        } 
+        // if ($div2.hasClass('goback')){
+        //     $div2.removeClass('goback');
+        //     return false;
+        // } 
 
         if ($div2.hasClass('play')) {
             myAudio.pause();
@@ -750,8 +759,10 @@ function sitmapstatus(i){
                         audioObj.num = ri;
                         //console.log(audioObj.num, this.realIndex, 'this.realIndex');
                         //console.log(this.realIndex, 'realIndex', this.previousIndex, 'previousIndex', this.activeIndex, 'activeIndex')
+                        
+                        //切了立马播
+                        myAudio.reset2('img/2/sc/'+ ri +'.mp3', 'img/2/sc/'+ ri +'.jpg');
                         tools.timer(false, function(){
-                            myAudio.reset2('img/2/sc/'+ ri +'.mp3', 'img/2/sc/'+ ri +'.jpg');
                             //console.log(ri ,'tt');
                             initVoiceResource();
                             document.body.className = 'pg2show';
@@ -771,7 +782,7 @@ function sitmapstatus(i){
             if(e.maxPointers ==1){
                 if (e.type=='panstart') {
                     $div2[0].className = 'div2 sec black';
-                    $('#pause').trigger('touchend');
+                    //$('#pause').trigger('touchend');
 
                 }else if(e.type=='panend'){
                     if (e.additionalEvent=='pandown') {
@@ -810,8 +821,12 @@ function sitmapstatus(i){
         //音源初始化
         function initVoiceResource(){
             xid = 0;
+            
+            //fm style phone 图片还原
             $('#blackbox')[0].className = 'black-box ct';
-            $div2[0].className = 'div2 sec pause';
+            $div2[0].className = 'div2 sec play';
+
+            //fm style phone 文字还原
             $('.word').css({
                 '-webkit-transform': 'translateY(0)'
             }); 
@@ -826,17 +841,17 @@ function sitmapstatus(i){
              
             if(e.type == 'rotatestart') {
                 rotatePa.d0 =  e.rotation ;
-                $div2.addClass('goback');
+                //$div2.addClass('goback');
             }else if(e.type == 'rotatemove') {
                 rotatePa.dt =  e.rotation - rotatePa.d0;
                 var ct = myAudio.currentTime();
                 
                 if (rotatePa.dt>0) {
                     myAudio.progress(Math.min(myAudio.duration(), ct + rotatePa.dt/50));
-                    $div2[0].className = 'div2 sec play go';
+                    $div2[0].className = 'div2 sec go';
                 }else{
                     myAudio.progress(Math.max(0, ct + rotatePa.dt/50));
-                    $div2[0].className = 'div2 sec play back';
+                    $div2[0].className = 'div2 sec back';
                 }
 
             }else if(e.type == 'rotateend') {
