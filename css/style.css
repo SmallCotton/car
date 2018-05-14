@@ -257,7 +257,7 @@ html,body{
     bottom: .5rem;
 }
 .nav-tab {
-    width: 4.8rem;
+    width: 8rem;
     position: fixed;
     bottom: .5rem;
     left: 0;
@@ -270,7 +270,7 @@ html,body{
     height: 1rem;
     display: block;
     float: left;
-    margin: 0 .1rem;
+    margin: 0 .5rem;
 } 
 .ico-2{
     width: 1rem;
@@ -324,6 +324,7 @@ html,body{
     position: fixed;
     bottom: .5rem;
     right: .4rem;
+	z-index: 11;
 /*    top: .5rem;
     left: .4rem;*/
 }
@@ -771,7 +772,8 @@ html,body{
     height: 50%;
     position: absolute;
     top: 0;
-/*    background-color: #fff;
+	z-index:9;
+  /*   background-color: #fff;
     opacity: .5;
     border: 1px solid #000;*/
 }
@@ -787,6 +789,7 @@ html,body{
     position: absolute;
     bottom: 0;
     left: 0;
+	z-index:9;
 /*    background-color: #fff;
     opacity: .5;*/
 }
